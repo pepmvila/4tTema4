@@ -87,6 +87,73 @@ footer b{display:inline-block;background:var(--blue);color:#fff;border-radius:3p
 [hidden]{display:none!important}
 @media(max-width:720px){.layout{display:block}.sidebar{position:fixed;inset:55px auto 0 0;height:auto;width:min(270px,85vw);z-index:3;box-shadow:4px 0 16px #143c4d33}.book{padding-top:12px}}
 @media print{.layout{display:block}.sidebar,.toolbar,.bottom,summary{display:none!important}.book{max-width:none;padding:0}.page{box-shadow:none}.page[hidden]{display:block!important;break-before:page}.box,.exercise{break-inside:avoid}}
+
+body{--projection-scale:1;--deep:#174b47;padding-bottom:68px}
+.book .content{font-size:calc(1em * var(--projection-scale))}
+.book .content .formula-html{font-size:calc(clamp(1rem,2vw,1.35rem) * var(--projection-scale))}
+#rouletteView{font-size:1rem;position:relative;min-height:200vh;background:white;user-select:none;-webkit-touch-callout:none}
+body:has(#rouletteView:not([hidden])){background:white}
+#rouletteView .exercise{position:absolute;width:max-content;border:0;background:white;padding:0;margin:0;box-shadow:none;overflow-wrap:anywhere}
+#rouletteView .exercise p{font-size:1.15em}
+#problemPicker{position:fixed;z-index:56;width:min(540px,calc(100vw - 16px));max-height:80vh;overflow:auto;background:white;border:1px solid #bacfc8;border-radius:10px;padding:10px;box-shadow:0 8px 24px #173a3638}
+.picker-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}
+#problemChoices{display:grid;gap:6px;margin-top:8px}
+#problemPicker button{background:#f4f8f6;border:1px solid #bacfc8;border-radius:6px;padding:5px 9px;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.projection-controls{position:fixed;bottom:12px;right:12px;z-index:54;display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:5px;background:#e8f0ed;border:1px solid #bacfc8;border-radius:10px;max-width:calc(100vw - 24px)}
+.projection-controls button,.roulette-dock button{background:white;color:#173a36;border:1px solid #bacfc8;border-radius:7px;padding:4px 7px;font:inherit;cursor:pointer}
+.projection-controls button[aria-pressed=true]{background:#bde5d5}
+.projection-controls input{width:28px;height:29px;padding:1px}
+.icon-button{display:inline-grid;place-items:center;width:32px;height:32px}
+.icon-button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#ink{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+body.inking #ink{pointer-events:auto;touch-action:none;cursor:crosshair}
+.roulette-dock{position:fixed;right:16px;bottom:60px;z-index:6;display:flex;align-items:center;gap:5px;max-width:calc(100vw - 123px)}
+#rouletteButton{flex:none;display:grid;place-items:center;width:44px;height:44px;padding:3px;background:#fff8e6;border:1px solid #ad985f;border-radius:12px}
+#rouletteButton svg{width:35px;height:35px}
+#rouletteButton[aria-expanded=true]{background:#e2efe8;border-color:#548d7c}
+.wheel-overlay{position:fixed;z-index:6;inset:15% 12% 19%;display:grid;place-items:center;pointer-events:none}
+.wheel-disc{position:relative;width:min(60vh,70vw);aspect-ratio:1}
+.wheel-disc canvas{width:100%;height:100%;display:block}
+.wheel-disc::before{content:"";position:absolute;top:-2px;left:calc(50% - 11px);border:11px solid transparent;border-top:19px solid var(--deep)}
+#wheelWinner{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:white;color:var(--deep);border:2px solid var(--deep);padding:.35em .65em;border-radius:8px;white-space:nowrap;font-size:1.5em;font-weight:800}
+.wheel-turn{background:white;border:1px solid var(--line);border-radius:10px;padding:5px 8px;min-width:0}
+#wheelTurn{display:flex;align-items:center;gap:8px;min-height:44px}
+#wheelTurn .controls{flex-wrap:nowrap;gap:3px}
+#wheelTurn output{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#wheelSetup{position:absolute;left:0;bottom:49px}
+@keyframes wheel-menu-in{from{opacity:0;transform:translateX(-10px);clip-path:inset(0 100% 0 0)}to{opacity:1;transform:translateX(0);clip-path:inset(0)}}
+@media(prefers-reduced-motion:no-preference){.wheel-turn:not([hidden]){animation:wheel-menu-in .2s ease-out both}}
+.wheel-turn label,.wheel-turn textarea{display:block}.wheel-turn textarea{width:min(330px,75vw);margin:5px 0;font:inherit}
+.wheel-turn .controls{gap:5px}.wheel-turn output{font-weight:750;display:block;margin-bottom:4px}
+
+
+.roulette-dock{z-index:54;max-width:calc(100vw - 32px)}
+.wheel-overlay{z-index:53}
+.wheel-turn{border-color:#bacfc8}
+.wheel-turn .controls{display:flex;gap:4px}
+#wheelSetup{left:auto;right:0}
+@media print{.projection-controls,.roulette-dock,.wheel-overlay,#ink{display:none!important}body{padding-bottom:0}}
+
+#inkOptions{position:absolute;right:0;bottom:calc(100% + 6px);display:flex;flex-wrap:wrap;gap:6px;padding:6px;background:#e8f0ed;border:1px solid #bacfc8;border-radius:9px;width:max-content;max-width:calc(100vw - 24px)}
+body:has(.roulette-dock:not([hidden])) #inkOptions{bottom:calc(100% + 59px)}
+#inkSizes,#inkColors{display:flex;gap:4px}
+#inkOptions button{width:28px;height:28px;padding:3px;display:grid;place-items:center}
+#inkSizes span{width:var(--tip-dot);height:var(--tip-dot);border-radius:50%;background:currentColor}
+#inkSizes button:nth-child(1){--tip-dot:4px}
+#inkSizes button:nth-child(2){--tip-dot:8px}
+#inkSizes button:nth-child(3){--tip-dot:13px}
+#inkColors button::after{content:"";width:15px;height:15px;border-radius:50%;border:1px solid #24413c77;background:var(--swatch)}
+#inkOptions button[aria-pressed=true]{outline:2px solid #174b47;outline-offset:1px}
+
+#inkOptions #clearAnnotations{width:auto;padding:3px 8px;white-space:nowrap}
+#customInkColor{border:1px solid #bacfc8;background:white;border-radius:7px;cursor:pointer}
+#customInkColor.active{outline:2px solid #174b47;outline-offset:1px}
+#rouletteView{touch-action:none}
+html:has(#rouletteView:not([hidden])),body:has(#rouletteView:not([hidden])){scrollbar-width:none;overflow-anchor:none}
+html:has(#rouletteView:not([hidden]))::-webkit-scrollbar,
+body:has(#rouletteView:not([hidden]))::-webkit-scrollbar{display:none}
+body.hand-mode #ink{cursor:grab}
+body.hand-mode.dragging #ink{cursor:grabbing}
 </style></head>
 <body><div class="layout">
 <aside class="sidebar" id="index"><a class="brand" href="#introduccio"><span>%</span><span><small>Matemàtiques de 4t d’ESO</small>Problemes aritmètics</span></a>
@@ -409,6 +476,53 @@ Costa 7 € per 2 km i 11 € per 4 km.</p></details></section>
 <section class="exercise"><p><strong>6.</strong> Un capital de 2.000 € es converteix en 2.205 € al cap de dos anys, amb interès compost anual constant. Quin ha estat el percentatge d’interès anual?</p><details><summary><span class="show">Mostra</span><span class="hide">Amaga</span> la solució<span class="sr"> de l’exercici 6</span></summary><p class="answer">5 % anual.</p></details></section>
 <section class="exercise"><p><strong>7.</strong> Una cooperativa inverteix 8.000 € en un fons que reinverteix els rendiments i creix un 2,5 % anual. Quin guany acumula al cap de tres anys? Arrodoneix als cèntims.</p><details><summary><span class="show">Mostra</span><span class="hide">Amaga</span> la solució<span class="sr"> de l’exercici 7</span></summary><p class="answer">615,13 €.</p></details></section>
 </div><footer><b>3d</b> Problemes aritmètics</footer></article><nav class="bottom" aria-label="Canvia d’apartat"><a href="#3c"><small>Anterior ‹</small>Altres problemes aritmètics</a><span></span></nav></div></main></div>
+
+<section id="rouletteView" aria-label="Pissarra del mode Ruleta" hidden></section>
+<section id="problemPicker" aria-label="Tria un problema" hidden>
+<div class="picker-heading"><strong>Insereix un problema</strong><button id="closeProblemPicker" type="button" aria-label="Tanca">×</button></div>
+<p id="emptyProblems" hidden>Aquest apartat no té exercicis per inserir.</p>
+<div id="problemChoices"></div>
+</section>
+<div class="projection-controls" role="group" aria-label="Controls de projecció">
+<button id="hand" type="button" class="icon-button" title="Mà: arrossega la pissarra" aria-label="Mà: arrossega la pissarra" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12V6a1.5 1.5 0 0 1 3 0v5-7a1.5 1.5 0 0 1 3 0v7-5a1.5 1.5 0 0 1 3 0v6-3a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-2.7l-3-4.3a1.6 1.6 0 0 1 2.5-2Z"/></svg></button>
+<button id="pen" type="button" class="icon-button" title="Llapis" aria-label="Llapis" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-1 5 5-1L20 8l-4-4Zm10-10 4 4"/></svg></button>
+<button id="highlighter" type="button" class="icon-button" title="Subratllador" aria-label="Subratllador" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 13 10-10 4 4-10 10H7zm0 0-3 4v3h4l3-3M3 22h12"/></svg></button>
+<button id="eraser" type="button" class="icon-button" title="Goma" aria-label="Goma" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 14 9-10a2 2 0 0 1 3 0l4 4a2 2 0 0 1 0 3l-8 9H8l-4-4a1.5 1.5 0 0 1 0-2Zm4-5 8 8m-5 3h10"/></svg></button>
+<button id="projectionMode" type="button" aria-controls="rouletteView" aria-pressed="false">Mode Ruleta</button>
+<button id="smallerText" type="button" aria-label="Disminueix la lletra" title="Disminueix la lletra">A−</button>
+<button id="largerText" type="button" aria-label="Augmenta la lletra" title="Augmenta la lletra">A+</button>
+<button id="fullscreen" type="button" class="icon-button" title="Pantalla completa" aria-label="Pantalla completa" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+
+
+
+<div id="inkOptions" hidden>
+<div id="inkSizes" role="group" aria-label="Gruix de la punta">
+<button type="button" data-tip="0" title="Punta fina" aria-label="Punta fina"><span></span></button>
+<button type="button" data-tip="1" title="Punta mitjana" aria-label="Punta mitjana"><span></span></button>
+<button type="button" data-tip="2" title="Punta gruixuda" aria-label="Punta gruixuda"><span></span></button>
+</div>
+<div id="inkColors" role="group" aria-label="Colors ràpids">
+<button type="button" data-color="0" title="Negre" aria-label="Negre"></button>
+<button type="button" data-color="1" title="Vermell" aria-label="Vermell"></button>
+<button type="button" data-color="2" title="Blau" aria-label="Blau"></button>
+<button type="button" data-color="3" title="Verd" aria-label="Verd"></button>
+<button type="button" data-color="4" title="Groc" aria-label="Groc"></button>
+<input id="customInkColor" type="color" aria-label="Tria qualsevol color" title="Tria qualsevol color">
+</div>
+<button id="clearAnnotations" type="button" title="Esborra totes les anotacions" aria-label="Esborra totes les anotacions" hidden>Esborra-ho tot</button>
+</div>
+</div><div class="wheel-overlay" id="wheelOverlay" hidden aria-hidden="true"><div class="wheel-disc"><canvas id="wheelCanvas" width="720" height="720"></canvas><span id="wheelWinner" hidden></span></div></div>
+<div class="roulette-dock" id="rouletteDock" hidden><button id="rouletteButton" type="button" aria-expanded="false" aria-controls="wheelTurn wheelOverlay wheelSetup" title="Obre la ruleta de 4t B (mode 6)" aria-label="Obre la ruleta de 4t B (mode 6)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="15" fill="#fff5d2" stroke="#174b47" stroke-width="2"/><path d="M20 22V8a14 14 0 0 1 12 21z" fill="#e8ae4f"/><path d="M20 22l12 7a14 14 0 0 1-24 0z" fill="#dc795a"/><path d="M20 22l-12 7a14 14 0 0 1 12-21z" fill="#5daad0"/><circle cx="20" cy="22" r="3" fill="#174b47"/><path d="M16 3h8l-4 9z" fill="#174b47"/></svg></button><div class="wheel-turn" id="wheelSetup" hidden>
+<form id="wheelForm"><label for="wheelNames"><strong>Ruleta de 4t B · Mode 6</strong><br>Enganxa el llistat, un nom per línia.</label>
+<textarea id="wheelNames" rows="5" required></textarea>
+<div class="controls"><button class="primary">Desa i gira</button><button id="wheelCancel" type="button">Tanca</button></div></form>
+</div>
+<div class="wheel-turn" id="wheelTurn" hidden>
+<output id="wheelStudent" aria-live="polite"></output>
+<div class="controls"><button class="icon-button" type="button" data-feedback="good" title="Bé" aria-label="Bé">✓</button><button class="icon-button" type="button" data-feedback="bad" title="Malament" aria-label="Malament">✗</button><button class="icon-button" type="button" data-feedback="pass" title="Passar" aria-label="Passar">⏭</button><button class="icon-button" type="button" data-feedback="delete" title="Esborrar" aria-label="Esborrar">⌫</button></div>
+</div>
+</div>
+<canvas id="ink" aria-hidden="true"></canvas>
 <script>
 const articles = [...document.querySelectorAll('.page')];
 const indexLinks = [...document.querySelectorAll('.sidebar nav a')];
@@ -454,4 +568,655 @@ indexLinks.forEach(link => link.addEventListener('click', () => {
 }));
 window.addEventListener('hashchange', () => showPage(true));
 showPage(Boolean(location.hash));
+const $ = id => document.getElementById(id);
+let previousScroll = {x:0,y:0};
+const board = $('rouletteView');
+let boardZoom = 100;
+const boardScale = () => boardZoom / 100;
+const picker = $('problemPicker');
+let sourceProblems = [];
+let placement = null;
+let press = null;
+function growBoard() {
+  if (board.hidden) return;
+  const bounds = board.getBoundingClientRect();
+  const scale = boardScale();
+  const left = bounds.left > -innerWidth * .65 ? Math.ceil(innerWidth / scale) : 0;
+  const top = bounds.top > -innerHeight * .65 ? Math.ceil(innerHeight / scale) : 0;
+  const right = bounds.right < innerWidth * 1.65 ? Math.ceil(innerWidth / scale) : 0;
+  const bottom = bounds.bottom < innerHeight * 1.65 ? Math.ceil(innerHeight / scale) : 0;
+  if (!(left || right || top || bottom)) return;
+  board.style.width = (board.offsetWidth + left + right) + 'px';
+  board.style.minHeight = (board.offsetHeight + top + bottom) + 'px';
+  if (!left && !top) return;
+  for (const problem of board.children) {
+    problem.style.left = (parseFloat(problem.style.left) + left) + 'px';
+    problem.style.top = (parseFloat(problem.style.top) + top) + 'px';
+  }
+  for (const stroke of strokes) {
+    for (const point of stroke.points) {
+      point.x += left;
+      point.y += top;
+    }
+  }
+  if (placement) {
+    placement.x += left;
+    placement.y += top;
+  }
+  // Keep the current view still as room is added above or to its left.
+  window.scrollBy(left * scale,top * scale);
+  renderInk();
+}
+function closePicker() {
+  picker.hidden = true;
+  placement = null;
+}
+function insertProblem(exercise) {
+  if (!placement) return;
+  const copy = exercise.cloneNode(true);
+  copy.querySelectorAll('details').forEach(node => node.remove());
+  copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+  copy.removeAttribute('id');
+  copy.style.top = placement.y + 'px';
+  const x = Math.min(placement.x, Math.max(12, board.clientWidth - 180));
+  copy.style.left = Math.max(0,x) + 'px';
+  copy.style.maxWidth = Math.floor(innerWidth * .84 / boardScale()) + 'px';
+  board.append(copy);
+  if (placement.y + copy.offsetHeight + 80 > board.offsetHeight) {
+    board.style.minHeight = (placement.y + copy.offsetHeight + innerHeight) + 'px';
+  }
+  closePicker();
+}
+function openPicker(clientX, clientY) {
+  const bounds = board.getBoundingClientRect();
+  placement = {x:(clientX - bounds.left) / boardScale(),y:(clientY - bounds.top) / boardScale()};
+  const choices = $('problemChoices');
+  choices.replaceChildren();
+  $('emptyProblems').hidden = Boolean(sourceProblems.length);
+  sourceProblems.forEach((exercise,index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = exercise.querySelector(':scope > p')?.textContent.trim() || 'Problema ' + (index + 1);
+    button.onclick = () => insertProblem(exercise);
+    choices.append(button);
+  });
+  picker.hidden = false;
+  picker.style.left = Math.max(8,Math.min(clientX,innerWidth - picker.offsetWidth - 8)) + 'px';
+  picker.style.top = Math.max(8,Math.min(clientY,innerHeight - picker.offsetHeight - 8)) + 'px';
+  picker.querySelector('#closeProblemPicker').focus({preventScroll:true});
+}
+function toggleProjection() {
+  if (board.hidden) {
+    previousScroll = {x:window.scrollX,y:window.scrollY};
+    sourceProblems = [...articles.find(article => !article.hidden).querySelectorAll('.exercise')];
+    board.replaceChildren();
+    board.style.width = Math.ceil(innerWidth * 3 / boardScale()) + 'px';
+    board.style.minHeight = Math.ceil(innerHeight * 3 / boardScale()) + 'px';
+    layout.hidden = true;
+    board.hidden = false;
+    $('hand').hidden = false;
+    $('rouletteDock').hidden = false;
+    $('projectionMode').textContent = 'Surt del mode Ruleta';
+    $('projectionMode').setAttribute('aria-pressed','true');
+    window.scrollTo(innerWidth,innerHeight);
+    growBoard();
+  } else {
+    cancelPress();
+    closePicker();
+    setWheelOpen(false);
+    $('rouletteDock').hidden = true;
+    board.hidden = true;
+    $('hand').hidden = true;
+    if (mode === 'hand') setMode('hand');
+    layout.hidden = false;
+    $('projectionMode').textContent = 'Mode Ruleta';
+    $('projectionMode').setAttribute('aria-pressed','false');
+    window.scrollTo(previousScroll.x,previousScroll.y);
+  }
+  updateSizeButtons();
+  clearInk();
+}
+function onBoard(event) {
+  return !board.hidden && (board.contains(event.target) || event.target === $('ink'));
+}
+function cancelPress() {
+  if (press) clearTimeout(press.timer);
+  press = null;
+}
+$('projectionMode').onclick = toggleProjection;
+$('closeProblemPicker').onclick = closePicker;
+function openPickerFromHold(x,y,id) {
+  cancelPress();
+  if (pending?.id === id) {
+    const index = strokes.indexOf(pending.stroke);
+    if (index !== -1) strokes.splice(index,1);
+    pending = null;
+    cancelStraighten();
+    renderInk();
+  }
+  openPicker(x,y);
+}
+document.addEventListener('contextmenu',event => {
+  if (!onBoard(event)) return;
+  event.preventDefault();
+  if (!picker.hidden) return;
+  if (press) openPickerFromHold(press.x,press.y,press.id);
+  else openPicker(event.clientX,event.clientY);
+});
+document.addEventListener('pointerdown',event => {
+  if (!picker.hidden && !picker.contains(event.target)) closePicker();
+  if (!event.isPrimary || event.button !== 0 || !onBoard(event)) return;
+  cancelPress();
+  const {clientX:x,clientY:y,pointerId:id} = event;
+  press = {x,y,id,timer:setTimeout(() => openPickerFromHold(x,y,id),550)};
+},true);
+document.addEventListener('pointermove',event => {
+  if (press?.id === event.pointerId && Math.hypot(event.clientX - press.x,event.clientY - press.y) > 5) cancelPress();
+},true);
+for (const type of ['pointerup','pointercancel']) {
+  document.addEventListener(type,event => {
+    if (press?.id === event.pointerId) cancelPress();
+  },true);
+}
+window.addEventListener('scroll',growBoard,{passive:true});
+window.addEventListener('resize',growBoard);
+document.addEventListener('keydown',event => {
+  if (event.key === 'Escape' && !picker.hidden) {
+    closePicker();
+    event.stopImmediatePropagation();
+  }
+});
+$('fullscreen').onclick = async () => {
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await document.documentElement.requestFullscreen();
+  } catch {
+    alert('Obre el fitxer directament al navegador per activar la pantalla completa.');
+  }
+};
+document.addEventListener('fullscreenchange', () => {
+  const active = Boolean(document.fullscreenElement);
+  const label = active ? 'Surt de pantalla completa' : 'Pantalla completa';
+  $('fullscreen').setAttribute('aria-pressed', String(active));
+  $('fullscreen').setAttribute('aria-label',label);
+  $('fullscreen').title = label;
+});
+const ink = $('ink');
+const brush = ink.getContext('2d');
+const strokes = [];
+let textSize = 100;
+function updateSizeButtons() {
+  const value = board.hidden ? textSize : boardZoom;
+  $('smallerText').disabled = value === 80;
+  $('largerText').disabled = value === 160;
+  for (const [id,action] of [['smallerText','Disminueix'],['largerText','Augmenta']]) {
+    const label = action + (board.hidden ? ' la lletra' : ' el zoom de la pissarra');
+    $(id).title = label;
+    $(id).setAttribute('aria-label',label);
+  }
+}
+function zoomBoard(value,x,y,targetX=x,targetY=y) {
+  const prior = boardScale();
+  const before = board.getBoundingClientRect();
+  boardZoom = Math.max(80,Math.min(160,value));
+  board.style.zoom = boardScale();
+  const after = board.getBoundingClientRect();
+  const ratio = boardScale() / prior;
+  window.scrollBy(after.left + (x - before.left) * ratio - targetX,
+    after.top + (y - before.top) * ratio - targetY);
+  closePicker();
+  growBoard();
+  renderInk();
+  updateSizeButtons();
+}
+function changeTextSize(step) {
+  if (board.hidden) {
+    textSize = Math.max(80,Math.min(160,textSize + step));
+    document.body.style.setProperty('--projection-scale',textSize / 100);
+    clearInk();
+  } else {
+    zoomBoard(boardZoom + step,0,0);
+  }
+  updateSizeButtons();
+}
+$('smallerText').onclick = () => changeTextSize(-10);
+$('largerText').onclick = () => changeTextSize(10);
+let mode = null;
+let pending = null;
+let pan = null;
+let pinch = null;
+let singleTouch = null;
+let straightenTimer;
+const widths = {pen:[2,4,7],highlighter:[12,19,28],eraser:[36,54,76]};
+const colorsByTool = {
+  pen:['#17221f','#ba253b','#184db5','#176b43','#bc8800'],
+  highlighter:['#666b71','#f64e62','#4b9cff','#47c66b','#ffd51d']
+};
+const tip = {pen:1,highlighter:1,eraser:1};
+const color = {pen:0,highlighter:4};
+const customColors = {pen:'#683bac',highlighter:'#e58afb'};
+const customColorInput = $('customInkColor');
+customColorInput.oninput = () => {
+  if (mode !== 'pen' && mode !== 'highlighter') return;
+  customColors[mode] = customColorInput.value;
+  color[mode] = 'custom';
+  updateInkOptions();
+};
+$('clearAnnotations').onclick = () => clearInk();
+const tipButtons = [...$('inkSizes').querySelectorAll('button')];
+const colorButtons = [...$('inkColors').querySelectorAll('button')];
+function updateInkOptions() {
+  $('inkOptions').hidden = !mode || mode === 'hand';
+  if (!mode || mode === 'hand') return;
+  tipButtons.forEach((button,index) => button.setAttribute('aria-pressed',String(tip[mode] === index)));
+  $('inkColors').hidden = mode === 'eraser';
+  $('clearAnnotations').hidden = mode !== 'eraser';
+  if (mode === 'eraser') return;
+  customColorInput.value = customColors[mode];
+  customColorInput.classList.toggle('active',color[mode] === 'custom');
+  colorButtons.forEach((button,index) => {
+    button.style.setProperty('--swatch',colorsByTool[mode][index]);
+    button.setAttribute('aria-pressed',String(color[mode] === index));
+  });
+}
+tipButtons.forEach((button,index) => { button.onclick = () => { if (mode) tip[mode] = index; updateInkOptions(); }; });
+colorButtons.forEach((button,index) => { button.onclick = () => { if (mode && mode !== 'eraser') color[mode] = index; updateInkOptions(); }; });
+function cancelStraighten() {
+  clearTimeout(straightenTimer);
+}
+function scheduleStraighten(point) {
+  cancelStraighten();
+  const active = pending;
+  active.anchor = point;
+  straightenTimer = setTimeout(() => {
+    if (pending !== active || active.stroke.erase || active.stroke.points.length < 2) return;
+    const points = active.stroke.points;
+    const first = points[0];
+    const last = points.at(-1);
+    if (Math.hypot(last.x - first.x,last.y - first.y) < 16) return;
+    active.straight = true;
+    active.stroke.points = [first,last];
+    renderInk();
+  },530);
+}
+function setMode(next) {
+  mode = mode === next ? null : next;
+  pending = null;
+  cancelStraighten();
+  const drawing = Boolean(mode);
+  document.body.classList.toggle('inking',drawing);
+  document.body.classList.toggle('hand-mode', mode === 'hand');
+  document.body.classList.remove('dragging');
+  pan = null;
+  $('hand').setAttribute('aria-pressed',String(mode === 'hand'));
+  layout.inert = drawing;
+  $('rouletteView').inert = drawing;
+  $('pen').setAttribute('aria-pressed',String(mode === 'pen'));
+  $('eraser').setAttribute('aria-pressed',String(mode === 'eraser'));
+  $('highlighter').setAttribute('aria-pressed',String(mode === 'highlighter'));
+  updateInkOptions();
+}
+$('hand').onclick = () => setMode('hand');
+$('pen').onclick = () => setMode('pen');
+$('eraser').onclick = () => setMode('eraser');
+$('highlighter').onclick = () => setMode('highlighter');
+function clearInk() {
+  cancelStraighten();
+  pending = null;
+  strokes.length = 0;
+  renderInk();
+}
+function renderInk() {
+  const scale = window.devicePixelRatio || 1;
+  const width = Math.round(innerWidth * scale);
+  const height = Math.round(innerHeight * scale);
+  if (ink.width !== width || ink.height !== height) {
+    ink.width = width;
+    ink.height = height;
+  }
+  brush.setTransform(scale,0,0,scale,0,0);
+  brush.clearRect(0,0,innerWidth,innerHeight);
+  const bounds = board.hidden ? null : board.getBoundingClientRect();
+  const zoom = bounds ? boardScale() : 1;
+  const viewX = x => bounds ? bounds.left + x * zoom : x - scrollX;
+  const viewY = y => bounds ? bounds.top + y * zoom : y - scrollY;
+  brush.lineCap = brush.lineJoin = 'round';
+  for (const {erase,color,points,width,alpha} of strokes) {
+    brush.globalCompositeOperation = erase ? 'destination-out' : 'source-over';
+    brush.strokeStyle = color;
+    brush.lineWidth = width * zoom;
+    brush.globalAlpha = alpha;
+    brush.beginPath();
+    const [first,...rest] = points;
+    brush.moveTo(viewX(first.x),viewY(first.y));
+    brush.lineTo(viewX(first.x) + .01,viewY(first.y));
+    for (let i = 0; i < rest.length - 1; i++) {
+      const current = rest[i];
+      const next = rest[i + 1];
+      brush.quadraticCurveTo(viewX(current.x),viewY(current.y),
+        viewX((current.x + next.x) / 2),viewY((current.y + next.y) / 2));
+    }
+    const last = rest.at(-1);
+    if (last) brush.lineTo(viewX(last.x),viewY(last.y));
+    brush.stroke();
+  }
+  brush.globalCompositeOperation = 'source-over';
+  brush.globalAlpha = 1;
+}
+function inkPoint(event) {
+  if (board.hidden) return {x:event.pageX,y:event.pageY};
+  const bounds = board.getBoundingClientRect();
+  return {x:(event.clientX - bounds.left) / boardScale(),y:(event.clientY - bounds.top) / boardScale()};
+}
+ink.addEventListener('pointerdown', event => {
+  if (!mode || pinch || !event.isPrimary || event.button !== 0) return;
+  event.preventDefault();
+  ink.setPointerCapture(event.pointerId);
+  if (mode === 'hand') {
+    pan = {id:event.pointerId,x:event.clientX,y:event.clientY};
+    document.body.classList.add('dragging');
+    return;
+  }
+  const first = inkPoint(event);
+  const erase = mode === 'eraser';
+  const selectedColor = color[mode] === 'custom' ? customColors[mode] : colorsByTool[mode]?.[color[mode]];
+  const stroke = {erase,color:erase ? '#000' : selectedColor,
+    points:[first],width:widths[mode][tip[mode]],alpha:mode === 'highlighter' ? .34 : 1};
+  pending = {id:event.pointerId,stroke};
+  strokes.push(stroke);
+  renderInk();
+});
+ink.addEventListener('pointermove', event => {
+  if (pinch) return;
+  if (pan?.id === event.pointerId) {
+    window.scrollBy(pan.x - event.clientX,pan.y - event.clientY);
+    pan.x = event.clientX;
+    pan.y = event.clientY;
+    return;
+  }
+  if (pending?.id !== event.pointerId) return;
+  const point = inkPoint(event);
+  if (pending.straight) pending.stroke.points[1] = point;
+  else {
+    const samples = event.getCoalescedEvents?.() ?? [];
+    for (const sample of samples) pending.stroke.points.push(inkPoint(sample));
+    pending.stroke.points.push(point);
+    if (!pending.anchor || Math.hypot(point.x - pending.anchor.x,point.y - pending.anchor.y) > 5) {
+      scheduleStraighten(point);
+    }
+  }
+  renderInk();
+});
+for (const type of ['pointerup','pointercancel','lostpointercapture']) {
+  ink.addEventListener(type, event => { if (pending?.id === event.pointerId) { cancelStraighten(); pending = null; }
+    if (pan?.id === event.pointerId) { pan = null; document.body.classList.remove('dragging'); } });
+}
+function touchPair(touches) {
+  const [a,b] = touches;
+  return {distance:Math.hypot(a.clientX - b.clientX,a.clientY - b.clientY),
+    x:(a.clientX + b.clientX)/2,y:(a.clientY + b.clientY)/2};
+}
+document.addEventListener('touchstart',event => {
+  if (!onBoard(event)) return;
+  if (event.touches.length === 1 && !mode) {
+    const touch = event.touches[0];
+    singleTouch = {x:touch.clientX,y:touch.clientY};
+    return;
+  }
+  if (event.touches.length !== 2) return;
+  if (event.cancelable) event.preventDefault();
+  singleTouch = null;
+  cancelPress();
+  cancelStraighten();
+  if (pending) {
+    const index = strokes.indexOf(pending.stroke);
+    if (index >= 0) strokes.splice(index,1);
+    pending = null;
+  }
+  pan = null;
+  document.body.classList.remove('dragging');
+  const pair = touchPair(event.touches);
+  if (!pair.distance) return;
+  pinch = {...pair,zoom:boardZoom,scaling:false};
+  renderInk();
+},{passive:false});
+document.addEventListener('touchmove',event => {
+  if (board.hidden) return;
+  if (pinch && event.touches.length === 2) {
+    if (event.cancelable) event.preventDefault();
+    const pair = touchPair(event.touches);
+    const ratio = pair.distance / pinch.distance;
+    if (Math.abs(ratio - 1) >= .04) pinch.scaling = true;
+    if (pinch.scaling) {
+      zoomBoard(pinch.zoom * ratio,pinch.x,pinch.y,pair.x,pair.y);
+    } else {
+      window.scrollBy(pinch.x - pair.x,pinch.y - pair.y);
+    }
+    pinch.x = pair.x;
+    pinch.y = pair.y;
+  } else if (singleTouch && event.touches.length === 1 && !mode) {
+    if (event.cancelable) event.preventDefault();
+    const touch = event.touches[0];
+    window.scrollBy(singleTouch.x - touch.clientX,singleTouch.y - touch.clientY);
+    singleTouch = {x:touch.clientX,y:touch.clientY};
+  }
+},{passive:false});
+for (const type of ['touchend','touchcancel']) document.addEventListener(type,event => {
+  if (event.touches.length < 2) pinch = null;
+  if (!event.touches.length) singleTouch = null;
+});
+window.addEventListener('scroll',renderInk,{passive:true});
+window.addEventListener('resize',renderInk);
+window.addEventListener('hashchange',clearInk);
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && mode) setMode(mode);
+});
+renderInk();
+
+// Probabilitats del mode 6 de La sort matemàtica.
+const wheelKey = 'guio-ruleta-4tB';
+const defaultRoster = ["Jana B. D.","Sole B. V.","Julen C. R.","Dana C. S.","Emma E. B.","Gerard G. J.","Noa G. D.","Daina I. M.","Alexander M. C.","Jordi M. V.","Tekla M.","Jana M. R.","Jhoan P. S.","Audrey P. R.","Luisa P. C.","Nora S. A.","Martina S. L.","Yael S. V.","Andrea S. C.","Emma S. G.","Carlota S. B.","Mehdi T."];
+const initialWeights = new Map(Object.entries({"Jhoan P. S.":13,"Sole B. V.":13,"Emma E. B.":13,"Alexander M. C.":5,"Luisa P. C.":5}));
+let roster = defaultRoster;
+try {
+  const saved = JSON.parse(localStorage.getItem(wheelKey) || '[]');
+  const original = JSON.parse(localStorage.getItem('la-sort-matematica-v1-lists') || '{}');
+  roster = saved.length ? saved : (original['4t ESO B'] || original['4t B'] || original['4tB'] || original['4t ESO'] || defaultRoster);
+} catch {}
+roster = Array.isArray(roster) ? [...new Set(roster.filter(name => typeof name === 'string' && name.trim()).map(name => name.trim()))] : [];
+const wheelPerson = name => ({name, weight:initialWeights.get(name) ?? 20, visual:1});
+let people = (roster.length ? roster : defaultRoster).map(wheelPerson);
+let picked = null;
+let spinning = false;
+let wheelOpen = false;
+let spinVersion = 0;
+const feedbackButtons = [...$('wheelTurn').querySelectorAll('[data-feedback]')];
+function setWheelOpen(open) {
+  wheelOpen = open;
+  const button = $('rouletteButton');
+  const label = open ? 'Tanca la ruleta de 4t B' : 'Obre la ruleta de 4t B (mode 6)';
+  button.setAttribute('aria-expanded', String(open));
+  button.setAttribute('aria-label', label);
+  button.title = label;
+  if (open) return;
+  spinVersion++;
+  spinning = false;
+  picked = null;
+  for (const id of ['wheelOverlay','wheelTurn','wheelSetup']) $(id).hidden = true;
+}
+let rotation = 0;
+const tau = 2 * Math.PI;
+const colors = ['#195c50','#e7be64','#76a894','#dc784f','#bed2b2','#8eb6b1'];
+const wheelCtx = $('wheelCanvas').getContext('2d');
+let tickAudio;
+let lastTick = -1;
+function enableWheelSound() {
+  try {
+    const Audio = window.AudioContext || window.webkitAudioContext;
+    if (!Audio) return;
+    tickAudio ??= new Audio();
+    if (tickAudio.state === 'suspended') tickAudio.resume().catch(() => {});
+  } catch {}
+}
+function wheelTick() {
+  if (tickAudio?.state !== 'running') return;
+  const now = tickAudio.currentTime;
+  if (now - lastTick < .055) return;
+  lastTick = now;
+  const oscillator = tickAudio.createOscillator();
+  const gain = tickAudio.createGain();
+  oscillator.type = 'triangle';
+  oscillator.frequency.setValueAtTime(740, now);
+  oscillator.frequency.exponentialRampToValueAtTime(250, now + .035);
+  gain.gain.setValueAtTime(.11, now);
+  gain.gain.exponentialRampToValueAtTime(.001, now + .045);
+  oscillator.connect(gain);
+  gain.connect(tickAudio.destination);
+  oscillator.start(now);
+  oscillator.stop(now + .05);
+}
+function wheelDot(angle, distance, radius, fill) {
+  wheelCtx.beginPath();
+  wheelCtx.arc(360 + distance * Math.cos(angle), 360 + distance * Math.sin(angle), radius, 0, tau);
+  wheelCtx.fillStyle = fill;
+  wheelCtx.fill();
+}
+function drawWheel() {
+  const total = people.reduce((sum, person) => sum + person.visual, 0);
+  wheelCtx.clearRect(0, 0, 720, 720);
+  let angle = rotation;
+  const pegs = [];
+  people.forEach((person, index) => {
+    const span = tau * person.visual / total;
+    pegs.push(angle);
+    wheelCtx.beginPath();
+    wheelCtx.moveTo(360,360);
+    wheelCtx.arc(360,360,326,angle,angle + span);
+    wheelCtx.closePath();
+    wheelCtx.fillStyle = colors[index % colors.length];
+    wheelCtx.fill();
+    wheelCtx.save();
+    wheelCtx.translate(360,360);
+    wheelCtx.rotate(angle + span / 2);
+    wheelCtx.font = 'bold 22px system-ui';
+    wheelCtx.textAlign = 'right';
+    wheelCtx.textBaseline = 'middle';
+    wheelCtx.fillStyle = index % colors.length === 0 ? 'white' : '#132d29';
+    wheelCtx.fillText(person.name,304,0,248);
+    wheelCtx.restore();
+    angle += span;
+  });
+  pegs.forEach(peg => {
+    wheelDot(peg,321,8,'#234741');
+    wheelDot(peg,321,5,'#f7f2d9');
+  });
+  for (let i = 0; i < 36; i++) {
+    const lit = (i + Math.floor(rotation * 5)) % 6 < 3;
+    wheelDot(i * tau / 36,344,8,'#725936');
+    wheelDot(i * tau / 36,344,lit ? 6 : 4,lit ? '#ffdf75' : '#bc9b65');
+  }
+}
+function spinWheel() {
+  if (!wheelOpen || spinning) return;
+  if (!people.length) {
+    $('wheelStudent').textContent = 'No queden noms a la ruleta.';
+    $('wheelTurn').hidden = false;
+    feedbackButtons.forEach(button => { button.disabled = true; });
+    return;
+  }
+  const version = ++spinVersion;
+  enableWheelSound();
+  if ($('wheelTurn').hidden) {
+    $('wheelStudent').textContent = 'Girant…';
+    $('wheelTurn').hidden = false;
+  }
+  spinning = true;
+  picked = null;
+  feedbackButtons.forEach(button => { button.disabled = true; });
+  $('wheelOverlay').hidden = false;
+  $('wheelWinner').hidden = true;
+  const sum = people.reduce((total, person) => total + person.weight, 0);
+  let ticket = Math.random() * sum;
+  const winner = people.find(person => (ticket -= person.weight) < 0) ?? people.at(-1);
+  const total = people.reduce((weight, person) => weight + person.visual, 0);
+  const before = people.slice(0, people.indexOf(winner)).reduce((weight, person) => weight + person.visual, 0);
+  const target = -Math.PI / 2 - tau * (before + winner.visual / 2) / total;
+  const start = rotation;
+  const distance = tau * 5 + ((target - start) % tau + tau) % tau;
+  let share = 0;
+  const pegOffsets = people.map(person => {
+    const offset = tau * share / total;
+    share += person.visual;
+    return offset;
+  });
+  const begun = performance.now();
+  const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 2200;
+  function frame(now) {
+    if (version !== spinVersion) return;
+    const progress = Math.min(1, (now - begun) / duration);
+    const previous = rotation;
+    rotation = start + distance * (1 - (1 - progress) ** 3);
+    const crossed = pegOffsets.some(offset =>
+      Math.floor((previous + offset + Math.PI / 2) / tau) !== Math.floor((rotation + offset + Math.PI / 2) / tau)
+    );
+    if (crossed && duration > 1) wheelTick();
+    drawWheel();
+    if (progress < 1) return requestAnimationFrame(frame);
+    rotation %= tau;
+    $('wheelWinner').textContent = winner.name;
+    $('wheelWinner').hidden = false;
+    setTimeout(() => {
+      if (version !== spinVersion) return;
+      $('wheelOverlay').hidden = true;
+      $('wheelStudent').textContent = 'Ha de contestar: ' + winner.name;
+      $('wheelTurn').hidden = false;
+      feedbackButtons.forEach(button => { button.disabled = false; });
+      picked = winner;
+      spinning = false;
+    }, 1050);
+  }
+  requestAnimationFrame(frame);
+}
+$('rouletteButton').onclick = () => {
+  setWheelOpen(!wheelOpen);
+  if (!wheelOpen) return;
+  if (people.length || roster.length) spinWheel();
+  else {
+    $('wheelNames').value = roster.join('\n');
+    $('wheelSetup').hidden = false;
+    $('wheelNames').focus();
+  }
+};
+$('wheelCancel').onclick = () => setWheelOpen(false);
+$('wheelForm').onsubmit = event => {
+  event.preventDefault();
+  const names = [...new Set($('wheelNames').value.split(/\r?\n/).map(name => name.trim()).filter(Boolean))];
+  if (!names.length) return;
+  roster = names;
+  try { localStorage.setItem(wheelKey, JSON.stringify(names)); } catch {}
+  people = names.map(wheelPerson);
+  $('wheelSetup').hidden = true;
+  spinWheel();
+};
+$('wheelTurn').onclick = event => {
+  const action = event.target.closest('[data-feedback]')?.dataset.feedback;
+  if (!picked || !action) return;
+  if (action === 'delete') people = people.filter(person => person !== picked);
+  if (action === 'good' || action === 'bad') {
+    const factor = action === 'good' ? .25 : 1.5;
+    for (const key of ['weight','visual']) {
+      const total = people.reduce((sum, person) => sum + person[key], 0);
+      const previous = picked[key] / total;
+      const next = Math.min(.995, previous * factor);
+      if (people.length > 1) {
+        for (const person of people) {
+          person[key] = person === picked ? next : person[key] / total * (1 - next) / (1 - previous);
+        }
+      }
+    }
+  }
+  picked = null;
+  spinWheel();
+};
+
 </script></body></html>
