@@ -154,6 +154,13 @@ html:has(#rouletteView:not([hidden]))::-webkit-scrollbar,
 body:has(#rouletteView:not([hidden]))::-webkit-scrollbar{display:none}
 body.hand-mode #ink{cursor:grab}
 body.hand-mode.dragging #ink{cursor:grabbing}
+
+#boardScroll{position:fixed;inset:0;overflow:auto;overscroll-behavior:none;overflow-anchor:none;scrollbar-width:none;background:white}
+#boardScroll::-webkit-scrollbar{display:none}
+@media(max-width:600px){
+  .projection-controls{right:8px;left:8px;bottom:max(8px,env(safe-area-inset-bottom));justify-content:center;max-width:none}
+  .roulette-dock{right:8px;bottom:calc(max(8px,env(safe-area-inset-bottom)) + var(--projection-controls-height,76px) + 5px)}
+}
 </style></head>
 <body><div class="layout">
 <aside class="sidebar" id="index"><a class="brand" href="#introduccio"><span>%</span><span><small>Matemàtiques de 4t d’ESO</small>Problemes aritmètics</span></a>
@@ -477,7 +484,7 @@ Costa 7 € per 2 km i 11 € per 4 km.</p></details></section>
 <section class="exercise"><p><strong>7.</strong> Una cooperativa inverteix 8.000 € en un fons que reinverteix els rendiments i creix un 2,5 % anual. Quin guany acumula al cap de tres anys? Arrodoneix als cèntims.</p><details><summary><span class="show">Mostra</span><span class="hide">Amaga</span> la solució<span class="sr"> de l’exercici 7</span></summary><p class="answer">615,13 €.</p></details></section>
 </div><footer><b>3d</b> Problemes aritmètics</footer></article><nav class="bottom" aria-label="Canvia d’apartat"><a href="#3c"><small>Anterior ‹</small>Altres problemes aritmètics</a><span></span></nav></div></main></div>
 
-<section id="rouletteView" aria-label="Pissarra del mode Ruleta" hidden></section>
+<div id="boardScroll" hidden><section id="rouletteView" aria-label="Pissarra del mode Ruleta" hidden></section></div>
 <section id="problemPicker" aria-label="Tria un problema" hidden>
 <div class="picker-heading"><strong>Insereix un problema</strong><button id="closeProblemPicker" type="button" aria-label="Tanca">×</button></div>
 <p id="emptyProblems" hidden>Aquest apartat no té exercicis per inserir.</p>
@@ -571,6 +578,11 @@ showPage(Boolean(location.hash));
 const $ = id => document.getElementById(id);
 let previousScroll = {x:0,y:0};
 const board = $('rouletteView');
+const boardScroll = $('boardScroll');
+const projectionControls = document.querySelector('.projection-controls');
+new ResizeObserver(() => {
+  document.body.style.setProperty('--projection-controls-height',projectionControls.offsetHeight + 'px');
+}).observe(projectionControls);
 let boardZoom = 100;
 const boardScale = () => boardZoom / 100;
 const picker = $('problemPicker');
@@ -604,7 +616,7 @@ function growBoard() {
     placement.y += top;
   }
   // Keep the current view still as room is added above or to its left.
-  window.scrollBy(left * scale,top * scale);
+  boardScroll.scrollBy(left * scale,top * scale);
   renderInk();
 }
 function closePicker() {
@@ -654,11 +666,12 @@ function toggleProjection() {
     board.style.minHeight = Math.ceil(innerHeight * 3 / boardScale()) + 'px';
     layout.hidden = true;
     board.hidden = false;
+    boardScroll.hidden = false;
     $('hand').hidden = false;
     $('rouletteDock').hidden = false;
     $('projectionMode').textContent = 'Surt del mode Ruleta';
     $('projectionMode').setAttribute('aria-pressed','true');
-    window.scrollTo(innerWidth,innerHeight);
+    boardScroll.scrollTo(innerWidth,innerHeight);
     growBoard();
   } else {
     cancelPress();
@@ -666,6 +679,7 @@ function toggleProjection() {
     setWheelOpen(false);
     $('rouletteDock').hidden = true;
     board.hidden = true;
+    boardScroll.hidden = true;
     $('hand').hidden = true;
     if (mode === 'hand') setMode('hand');
     layout.hidden = false;
@@ -718,7 +732,7 @@ for (const type of ['pointerup','pointercancel']) {
     if (press?.id === event.pointerId) cancelPress();
   },true);
 }
-window.addEventListener('scroll',growBoard,{passive:true});
+boardScroll.addEventListener('scroll',growBoard,{passive:true});
 window.addEventListener('resize',growBoard);
 document.addEventListener('keydown',event => {
   if (event.key === 'Escape' && !picker.hidden) {
@@ -762,7 +776,7 @@ function zoomBoard(value,x,y,targetX=x,targetY=y) {
   board.style.zoom = boardScale();
   const after = board.getBoundingClientRect();
   const ratio = boardScale() / prior;
-  window.scrollBy(after.left + (x - before.left) * ratio - targetX,
+  boardScroll.scrollBy(after.left + (x - before.left) * ratio - targetX,
     after.top + (y - before.top) * ratio - targetY);
   closePicker();
   growBoard();
@@ -929,7 +943,7 @@ ink.addEventListener('pointerdown', event => {
 ink.addEventListener('pointermove', event => {
   if (pinch) return;
   if (pan?.id === event.pointerId) {
-    window.scrollBy(pan.x - event.clientX,pan.y - event.clientY);
+    boardScroll.scrollBy(pan.x - event.clientX,pan.y - event.clientY);
     pan.x = event.clientX;
     pan.y = event.clientY;
     return;
@@ -990,14 +1004,14 @@ document.addEventListener('touchmove',event => {
     if (pinch.scaling) {
       zoomBoard(pinch.zoom * ratio,pinch.x,pinch.y,pair.x,pair.y);
     } else {
-      window.scrollBy(pinch.x - pair.x,pinch.y - pair.y);
+      boardScroll.scrollBy(pinch.x - pair.x,pinch.y - pair.y);
     }
     pinch.x = pair.x;
     pinch.y = pair.y;
   } else if (singleTouch && event.touches.length === 1 && !mode) {
     if (event.cancelable) event.preventDefault();
     const touch = event.touches[0];
-    window.scrollBy(singleTouch.x - touch.clientX,singleTouch.y - touch.clientY);
+    boardScroll.scrollBy(singleTouch.x - touch.clientX,singleTouch.y - touch.clientY);
     singleTouch = {x:touch.clientX,y:touch.clientY};
   }
 },{passive:false});
@@ -1005,6 +1019,13 @@ for (const type of ['touchend','touchcancel']) document.addEventListener(type,ev
   if (event.touches.length < 2) pinch = null;
   if (!event.touches.length) singleTouch = null;
 });
+boardScroll.addEventListener('scroll',renderInk,{passive:true});
+ink.addEventListener('wheel',event => {
+  if (board.hidden) return;
+  event.preventDefault();
+  const multiplier = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1;
+  boardScroll.scrollBy(event.deltaX * multiplier,event.deltaY * multiplier);
+},{passive:false});
 window.addEventListener('scroll',renderInk,{passive:true});
 window.addEventListener('resize',renderInk);
 window.addEventListener('hashchange',clearInk);
